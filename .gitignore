@@ -1,0 +1,35 @@
+# Compiled binaries — rebuild from source
+*.riscv
+*.arm
+*.armsimd
+*.o
+build/
+
+# gem5 simulation outputs
+m5out/
+m5out-*/
+stats.txt
+config.ini
+config.json
+
+# Vivado build artifacts (checkpoints, logs, intermediate)
+fpga_rtl_and_impl/vivado/build/
+fpga_rtl_and_impl/vivado/cong/
+fpga_rtl_and_impl/vivado/.Xil/
+*.jou
+*.log
+*.str
+
+# McPAT compiled binary
+mcpat/source/mcpat
+mcpat/source/cacti/cacti
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor
+.vscode/
+*.swp
+*~

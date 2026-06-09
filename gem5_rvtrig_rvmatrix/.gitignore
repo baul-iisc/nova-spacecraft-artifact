@@ -1,0 +1,169 @@
+# ==============================================================
+# gem5 + NOVA Custom ISA - .gitignore
+# ==============================================================
+
+# ---- Build artifacts ----
+build/
+*.o
+*.a
+*.so
+*.pyc
+__pycache__/
+
+# ---- gem5 simulation outputs ----
+m5out/
+m5out_*/
+
+# ---- Compiled binaries ----
+*.x86
+*.arm
+*.armsimd
+*.riscv
+
+# ---- Logs ----
+*.log
+nohup.out
+nohup_*.out
+
+# ---- Large binary/data files ----
+*.img
+*.eps
+*.bin
+*.raw
+*.pdf
+*.docx
+*.odt
+*.png
+*.svg
+
+# ---- LaTeX artifacts ----
+*.aux
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+texput.log
+
+# ---- Personal/Project files (NOT part of gem5) ----
+# Cursor/VSCode
+.cursor/
+.vscode/
+
+# Analysis scripts and results
+analysis/
+figures/
+experiments/
+results/
+phd_analysis/
+phd_analysis_refined/
+phd_thesis_study/
+
+# Simulation results directories
+simulation_results/
+simulation_results_*/
+simulation_results_forkjoin/
+comprehensive_simulation_study/
+gpu_simulation_study/
+heterogeneous_study/
+heterogeneous_multicore_study/
+core_count_study_all/
+review_study_results/
+review_study_results_timing/
+
+# DSE results
+dse_analysis_*/
+dse_atomic_*/
+dse_results_*/
+
+# Workload generation directories (large, regeneratable)
+new_spacecraft_workloads/
+new_spacecraft_workloads_multi_threaded*/
+new_spacecraft_workloads_fork_join*/
+matrix_hw_test/
+mission_scenarios/
+test_robotic_arm/
+test_gpu_workload/
+synthetic_image_generator/
+versal_npu/
+scheduler_quick_test*/
+scheduler_test_results/
+
+# Paper/thesis directories
+tc_paper/
+tc_paper_old/
+area_constrained_analysis/
+spacecraft_benchmarks_28/
+
+# Personal markdown notes/documentation
+cursor_*.md
+Spacecraft_workload_testing_with_Multicore_CPU*.md
+Analytical_Model_Derivation.md
+CORRECTIONS_APPLIED.md
+Enhancing_gem5_with_advanced_arc.md
+IMPROVED_CONTENTION_TRACKING.md
+MCPAT_POWER_MODELING.md
+MULTICORE_CONFIG_GUIDE.md
+MULTICORE_CORRECTIONS.md
+MULTICORE_MODIFICATIONS_SUMMARY.md
+Performance_Comparison.md
+SPACECRAFT_OCTA_DLS_GUIDE.md
+README_RT_SCHEDULING.md
+Summary_of_PhD_Status_Review_Meeting.md
+The_Futuristic_Space_Processor_Vision.md
+nova_processor_3p0.md
+readme_cache.md
+spacecraft_workloads_simulations.md
+test_commands.md
+PhD_DSE_Analysis_Report.*
+
+# Personal scripts (NOT gem5 build/test scripts)
+run_*.sh
+monitor_*.sh
+regenerate_report.sh
+rerun_*.sh
+gem5_memory_guard.sh
+standalone_memory_guard.sh
+
+# Personal Python scripts
+nova_*.py
+extract_*.py
+generate_all_accel_study.py
+phd_analysis_refined.py
+area_constrained_dse_analysis.py
+test_atomic_mt.py
+
+# Misc personal files
+*.csv
+cached_dse_analysis_results.txt
+status_cached_dse_21_workloads.txt
+scheduler_test_results.txt
+matrix-results.txt
+matrix.out
+matrix_8x8.c
+matrix_8x8.py
+exec-ns.cc.inc
+compressed*.bin
+synthetic_image*
+svgviewer-*.png
+xilinx-master-signing-key.asc
+comment*review*.docx
+comments_on_documents_review.docx
+review_minutes_transcripts.docx
+review?the_of_implementation.*
+McPAT_Power_model.docx
+Simulation_Runner_Scripts.docx
+gem5-build*.log*
+gem5-matrix-simulation*
+gem5-simulation-results*
+fs_simulation/
+accel_study_output.log
+ai_experiments.log
+comprehensive_study.out
+dse_analysis.csv
+
+# ---- Exceptions (keep these even if matched above) ----
+!MAINTAINERS.yaml
+!README.md
+!LICENSE
+!COPYING

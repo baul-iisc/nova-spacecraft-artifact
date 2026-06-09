@@ -1,0 +1,8 @@
+# -*- mode:python -*-
+# Mission Adapter for Autonomous Phase Management
+# Header-only library - no source files to compile
+
+Import('*')
+
+# These are header-only implementations, no Source() needed
+# Headers will be found automatically by the build system

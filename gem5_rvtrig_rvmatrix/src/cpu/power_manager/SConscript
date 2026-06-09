@@ -1,0 +1,8 @@
+# -*- mode:python -*-
+# Power Manager and Multi-Accelerator SoC Model
+# Header-only library - no source files to compile
+
+Import('*')
+
+# These are header-only implementations, no Source() needed
+# Headers will be found automatically by the build system

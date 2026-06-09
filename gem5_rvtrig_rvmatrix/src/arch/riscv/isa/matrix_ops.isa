@@ -1,0 +1,39 @@
+0x1d: decode MMINOP {
+            0x1: decode FUNCT3 {
+                0x4: MatrixLoadOp::mls({{
+                    for (int k = 0; k < 4; k++) {
+                        Mrd_uw[i + k] = Mem_mc.as<uint32_t>()[k];
+                    }
+                }});
+                0x5: MatrixStoreOp::mss({{
+                    for (int k = 0; k < 4; k++) {
+                        Mem_mc.as<uint32_t>()[k] = Mrd_uw[i + k];
+                    }
+                }});
+            }
+            0x2: ScalarMatrixMoveOp::mmv_xmu({{
+                Mrd_uw[i] = Rs1_uw;
+            }});
+            0x3: decode FUNCT3 {
+                0x0: MatrixArithLineOp::mmacf({{
+                    uint32_t row = i / 4;
+                    uint32_t col = i % 4;
+                    uint32_t row_stride = 4;
+
+                    float acc = Mrs3_mc->as<float>()[i];
+
+                    for (int j = 0; j < 4; j++) {
+                        acc += Mrs1_mc->as<float>()[row * row_stride + j] * Mrs2_mc->as<float>()[col * row_stride + j];
+                    }
+
+                    Mrd_sf[i] = acc;
+                }});
+                0x1: MatrixArithOp::maddf({{
+                    Mrd_sf[i] = Mrs1_sf[i] + Mrs2_sf[i];
+                }});
+                0x2: MatrixArithOp::msubf({{
+                    Mrd_sf[i] = Mrs1_sf[i] - Mrs2_sf[i];
+                }});
+            }
+        }
+

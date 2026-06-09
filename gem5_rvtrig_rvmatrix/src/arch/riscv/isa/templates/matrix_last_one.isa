@@ -1,0 +1,508 @@
+def template MatrixMacroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        %(reg_idx_arr_decl)s;
+    
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        using %(base_class)s::generateDisassembly;
+    };
+}};
+
+//def template MatrixMacroConstructor {{
+//    %(class_name)s::%(class_name)s(ExtMachInst _machInst)
+//        : %(base_class)s("%(mnemonic)s", _machInst, %(op_class)s)
+//    {
+//        %(set_reg_idx_arr)s;
+//        %(constructor)s;
+
+//        StaticInstPtr microop;
+        
+//        // Spawn four microops, each handling a different memory location
+//        for (uint32_t i = 0; i < 4; i++) {
+//            microop = new %(class_name)sMicro(_machInst, i);
+//            microop->setDelayedCommit();
+//            microop->setFlag(StaticInst::IsMicroop); // Explicitly set the IsMicroop flag
+//            this->microops.push_back(microop);
+
+//            // Debug print
+//            DPRINTF(MatRegs, "Created microop %d for row %d\n", i, i);
+//        }
+//        this->microops.front()->setFirstMicroop();
+//        this->microops.back()->setLastMicroop();
+
+//        // Debug print
+//        DPRINTF(MatRegs, "MatrixMacroConstructor: Created 4 microops\n");
+//    }
+//}};
+
+def template MatrixMacroConstructor {{
+    %(class_name)s::%(class_name)s(ExtMachInst _machInst)
+        : %(base_class)s("%(mnemonic)s", _machInst, %(op_class)s)
+    {
+        %(set_reg_idx_arr)s;
+        %(constructor)s;
+
+        StaticInstPtr microop;
+        
+        // Spawn four microops, each handling a different memory location
+        for (uint32_t i = 0; i < 4; i++) {
+            microop = new %(class_name)sMicro(_machInst, i);
+            microop->setDelayedCommit();
+            //microop->setFlag(StaticInst::IsMicroop);
+            this->microops.push_back(microop);
+
+            // Debug print
+            DPRINTF(MatRegs, "Created microop %d for row %d\n", i, i);
+            //DPRINTF(MatRegs, "Created microop %u for element index %u\n", i, i);
+        }
+        this->microops.front()->setFirstMicroop();
+        this->microops.back()->setLastMicroop();
+
+        // Debug print
+        DPRINTF(MatRegs, "MatrixMacroConstructor: Created 4 microops\n");
+        //DPRINTF(MatRegs, "MatrixMacroConstructor: Created 16 microops\n");
+    }
+}};
+
+//def template MatrixDecode {{
+//    switch (machInst.opcode) {
+//        case 0x1d: { // Matrix operations opcode
+//            switch (machInst.funct3) {
+//                case 0x4: { // Matrix Load Operation (mls)
+//                    %(class_name)s *macroop = new %(class_name)s(machInst);
+//                    DPRINTF(MatRegs, "Decoded Matrix Load Operation (mls)\n");
+//                    return macroop;
+//                }
+//                case 0x5: { // Matrix Store Operation (mss)
+//                    %(class_name)s *macroop = new %(class_name)s(machInst);
+//                    DPRINTF(MatRegs, "Decoded Matrix Store Operation (mss)\n");
+//                    return macroop;
+//                }
+//                case 0x2: { // Scalar-Matrix Move Operation (mmv_xmu)
+//                    %(class_name)s *macroop = new %(class_name)s(machInst);
+//                    DPRINTF(MatRegs, "Decoded Scalar-Matrix Move Operation (mmv_xmu)\n");
+//                    return macroop;
+//                }
+//                case 0x3: { // Matrix Arithmetic Operations
+//                    switch (machInst.funct7) { // Assuming funct7 is used for sub-operations
+//                        case 0x0: { // Matrix Multiply-Accumulate (mmacf)
+//                            %(class_name)s *macroop = new %(class_name)s(machInst);
+//                            DPRINTF(MatRegs, "Decoded Matrix Multiply-Accumulate (mmacf)\n");
+//                            return macroop;
+//                        }
+//                        case 0x1: { // Matrix Add (maddf)
+//                            %(class_name)s *macroop = new %(class_name)s(machInst);
+//                            DPRINTF(MatRegs, "Decoded Matrix Add Operation (maddf)\n");
+//                            return macroop;
+//                        }
+//                        case 0x2: { // Matrix Subtract (msubf)
+//                            %(class_name)s *macroop = new %(class_name)s(machInst);
+//                            DPRINTF(MatRegs, "Decoded Matrix Subtract Operation (msubf)\n");
+//                            return macroop;
+//                        }
+//                        default: { // Unknown sub-operation
+//                            DPRINTF(MatRegs, "Unknown Matrix Arithmetic Operation\n");
+//                            return new Unknown(machInst);
+//                        }
+//                    }
+//                }
+//                default: { // Unknown FUNCT3
+//                    DPRINTF(MatRegs, "Unknown Matrix Operation with FUNCT3 = %#x\n", machInst.funct3);
+//                    return new Unknown(machInst);
+//                }
+//            }
+//        }
+//        default: { // Unknown opcode (standard RISC-V instructions)
+//            // Delegate to the standard RISC-V decoder
+//            DPRINTF(MatRegs, "Delegating opcode %#x to standard RISC-V decoder\n", machInst.opcode);
+//            return new RiscvISA::Decoder::decodeStandardInst(machInst);
+//        }
+//    }
+//}};
+
+def template MatrixDecode {{
+    return new %(class_name)s(machInst);
+}};
+
+def template MatrixArithLineMicroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        RegId srcRegIdxArr[3];
+        RegId destRegIdxArr[1];
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        %(class_name)s(ExtMachInst _machInst, uint32_t _microIdx);
+        
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+
+        using %(base_class)s::generateDisassembly;
+    };
+}};
+
+def template MatrixArithLineMicroConstructor {{
+%(class_name)s::%(class_name)s(ExtMachInst _machInst, uint32_t _microIdx)
+  : %(base_class)s(
+        "%(mnemonic)s", _machInst, %(op_class)s, _microIdx)
+{
+    %(set_reg_idx_arr)s;
+    _numSrcRegs = 0;
+    _numDestRegs = 0;
+    setDestRegIdx(_numDestRegs++, matRegClass[_machInst.mrd]);
+    _numTypedDestRegs[MatRegClass]++;
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrs1]);
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrs2]);
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrs3]);
+}
+}};
+
+
+def template MatrixArithLineMicroExecute {{
+    Fault
+    %(class_name)s::execute(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        // Expand any gem5 macros like reading registers, etc.
+        %(op_decl)s;  
+        %(op_rd)s;  
+        uint32_t i = microIdx;  
+
+        
+        for (int row; row < 4; row++) {
+        DPRINTF(MatRegs, "Microop %d: Processing row %d\n", microIdx, row);
+            for(int k = 0; k < 4; k++) {
+                %(code)s;
+                i++;
+            }
+            
+        }
+
+        %(op_wb)s;
+
+        return NoFault;
+    }
+}};
+
+def template MatrixLoadMicroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        RegId srcRegIdxArr[2];
+        RegId destRegIdxArr[1];
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        %(class_name)s(ExtMachInst _machInst, uint32_t _microIdx);
+        
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+        Fault initiateAcc(ExecContext *, trace::InstRecord *) const override;
+        Fault completeAcc(PacketPtr, ExecContext *,
+                          trace::InstRecord *) const override;
+
+        using %(base_class)s::generateDisassembly;
+    };
+}};
+
+def template MatrixLoadMicroExecute {{
+    Fault
+    %(class_name)s::execute(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        Addr EA;
+
+        %(op_decl)s;
+        %(op_rd)s;
+
+        uint32_t i = microIdx;
+
+        for (int row; row < 4; row++) {
+            EA = Rs1 + ((uint64_t) i / 4) * Rs2 + (i % 4) * 4;
+	    // Debug print
+            DPRINTF(MatRegs, "Microop %d: Loading row %d from address %#x\n", microIdx, row, EA);
+            const size_t mem_size = 16;
+            std::vector<bool> byte_enable(mem_size, true);
+
+            Fault fault = xc->readMem(EA, (uint8_t*) &Mem, mem_size, 
+                                  memAccessFlags, byte_enable);
+            if (fault != NoFault)
+                return fault;
+
+            %(code)s;
+	    DPRINTF(MatRegs, "Microop %d: Loaded data from address %#x: %f\n", microIdx, EA, Mem);
+            i += 4;
+        }
+
+        %(op_wb)s;
+        return NoFault;
+    }
+}};
+
+//def template MatrixLoadMicroInitiateAcc{{
+//    Fault
+//    %(class_name)s::initiateAcc(ExecContext *xc,
+//        trace::InstRecord *traceData) const
+//    {
+//        Addr EA;
+//        %(op_decl)s;
+//        %(op_rd)s;
+
+//        %(ea_code)s;
+
+//        uint32_t mem_size = 4;
+//        const std::vector<bool> byte_enable(mem_size, true);
+
+//        // Debug print
+//        DPRINTF(MatRegs, "Microop %d: Initiating memory read for address %#x\n", microIdx, EA);
+        
+//        Fault fault = initiateMemRead(xc, EA, mem_size, memAccessFlags,
+//                                  byte_enable);
+
+//        return fault;
+//    }
+//}};
+
+def template MatrixLoadMicroInitiateAcc{{
+    Fault
+    %(class_name)s::initiateAcc(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        Addr EA;
+        %(op_decl)s;
+        %(op_rd)s;
+
+        %(ea_code)s;
+
+        uint32_t mem_size = 4;
+        const std::vector<bool> byte_enable(mem_size, true);
+
+        // Debug print
+        DPRINTF(MatRegs, "Microop %d: Initiating memory read for address %#x\n", microIdx, EA);
+        
+        Fault fault = initiateMemRead(xc, EA, mem_size, memAccessFlags,
+                                  byte_enable);
+
+        return fault;
+    }
+}};
+
+def template MatrixLoadMicroCompleteAcc{{
+    Fault
+    %(class_name)s::completeAcc(PacketPtr pkt, ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        %(op_decl)s;
+        %(op_rd)s;
+        
+        uint32_t i = microIdx;
+        memcpy(&Mem, pkt->getPtr<uint8_t>(), pkt->getSize());
+
+        %(code)s; // Process the loaded data
+
+        %(op_wb)s;
+        return NoFault;
+    }
+}};
+
+def template MatrixLoadMicroConstructor {{
+
+%(class_name)s::%(class_name)s(ExtMachInst _machInst, uint32_t _microIdx)
+  : %(base_class)s(
+        "%(mnemonic)s", _machInst, %(op_class)s, _microIdx)
+{
+    %(set_reg_idx_arr)s;
+    _numSrcRegs = 0;
+    _numDestRegs = 0;
+    setDestRegIdx(_numDestRegs++, matRegClass[_machInst.mrd]);
+    _numTypedDestRegs[MatRegClass]++;
+    setSrcRegIdx(_numSrcRegs++, intRegClass[_machInst.rs1]);
+    setSrcRegIdx(_numSrcRegs++, intRegClass[_machInst.rs2]);
+}
+
+}};
+
+def template MatrixStoreMicroConstructor {{
+%(class_name)s::%(class_name)s(ExtMachInst _machInst, uint32_t _microIdx)
+  : %(base_class)s(
+        "%(mnemonic)s", _machInst, %(op_class)s, _microIdx)
+{
+    %(set_reg_idx_arr)s;
+    _numSrcRegs = 0;
+    _numDestRegs = 0;
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrd]);
+    setSrcRegIdx(_numSrcRegs++, intRegClass[_machInst.rs1]);
+    setSrcRegIdx(_numSrcRegs++, intRegClass[_machInst.rs2]);
+    this->flags[IsStore] = true;
+}
+}};
+
+def template MatrixStoreMicroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        RegId srcRegIdxArr[3];
+        RegId destRegIdxArr[0];
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        %(class_name)s(ExtMachInst _machInst, uint32_t _microIdx);
+        
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+        Fault initiateAcc(ExecContext *, trace::InstRecord *) const override;
+        Fault completeAcc(PacketPtr, ExecContext *,
+                          trace::InstRecord *) const override;
+
+        using %(base_class)s::generateDisassembly;
+    };
+}};
+
+def template MatrixStoreMicroExecute {{
+    Fault
+    %(class_name)s::execute(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        Addr EA;
+
+        %(op_decl)s;
+        %(op_rd)s;
+
+        uint32_t i = microIdx;
+
+        for (int row; row < 4; row++) {
+            EA = Rs1 + ((uint64_t) i / 4) * Rs2 + (i % 4) * 4;
+
+        // Debug print
+        DPRINTF(MatRegs, "Microop %d: Storing row %d to address %#x\n", microIdx, row, EA);
+
+        const size_t mem_size = 16;
+        std::vector<bool> byte_enable(mem_size, true);
+	%(code)s;
+
+        // Debug print
+        DPRINTF(MatRegs, "Microop %d: Data to store: %f\n", microIdx, Mem);
+
+        Fault fault = xc->writeMem((uint8_t*) &Mem, mem_size, EA, memAccessFlags,
+                                    nullptr, byte_enable);
+        if (fault != NoFault)
+            return fault;
+           i += 4;
+        }
+
+        return NoFault;
+    }
+}};
+
+def template MatrixStoreMicroInitiateAcc{{
+    Fault
+    %(class_name)s::initiateAcc(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        Addr EA;
+
+        %(op_decl)s;
+        %(op_rd)s;
+
+        %(ea_code)s;
+
+        const size_t mem_size = 4;
+        std::vector<bool> byte_enable(mem_size, true);
+
+        uint32_t i = microIdx;
+        %(code)s;
+
+        Fault fault;
+        fault = xc->writeMem((uint8_t*) &Mem, mem_size, EA, memAccessFlags,
+                                nullptr, byte_enable);
+        return fault;
+    }
+}};
+
+def template MatrixStoreMicroCompleteAcc{{
+    Fault
+    %(class_name)s::completeAcc(PacketPtr pkt, ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        return NoFault;
+    }
+}};
+
+def template MatrixArithMicroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        RegId srcRegIdxArr[2];
+        RegId destRegIdxArr[1];
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        %(class_name)s(ExtMachInst _machInst, uint32_t _microIdx);
+        
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+
+        using %(base_class)s::generateDisassembly;
+    };
+}};
+
+def template MatrixArithMicroConstructor {{
+
+%(class_name)s::%(class_name)s(ExtMachInst _machInst, uint32_t _microIdx)
+  : %(base_class)s(
+        "%(mnemonic)s", _machInst, %(op_class)s, _microIdx)
+{
+    %(set_reg_idx_arr)s;
+    _numSrcRegs = 0;
+    _numDestRegs = 0;
+    setDestRegIdx(_numDestRegs++, matRegClass[_machInst.mrd]);
+    _numTypedDestRegs[MatRegClass]++;
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrs1]);
+    setSrcRegIdx(_numSrcRegs++, matRegClass[_machInst.mrs2]);
+}
+}};
+
+def template MatrixArithMicroExecute {{
+    Fault
+    %(class_name)s::execute(ExecContext *xc,
+        trace::InstRecord *traceData) const
+    {
+        %(op_decl)s;
+        %(op_rd)s;
+
+        // Each microop handles one row of the matrix, based on microIdx
+        uint32_t i = microIdx; // microIdx corresponds to the row index (0 to 3)
+
+        // Process the arithmetic operation for the row
+        %(code)s;
+
+        %(op_wb)s;
+
+        return NoFault;
+    }
+}};
+
+def template ScalarMatrixMoveMicroConstructor {{
+%(class_name)s::%(class_name)s(ExtMachInst _machInst, uint32_t _microIdx)
+  : %(base_class)s(
+        "%(mnemonic)s", _machInst, %(op_class)s, _microIdx)
+{
+    %(set_reg_idx_arr)s;
+    _numSrcRegs = 0;
+    _numDestRegs = 0;
+    setDestRegIdx(_numDestRegs++, matRegClass[_machInst.mrd]);
+    _numTypedDestRegs[MatRegClass]++;
+    setSrcRegIdx(_numSrcRegs++, intRegClass[_machInst.rs1]);
+}
+}};
+
+def template MatrixMoveMicroDeclare {{
+    class %(class_name)s : public %(base_class)s
+    {
+      private:
+        RegId srcRegIdxArr[1];
+        RegId destRegIdxArr[1];
+      public:
+        %(class_name)s(ExtMachInst _machInst);
+        %(class_name)s(ExtMachInst _machInst, uint32_t _microIdx);
+        
+        Fault execute(ExecContext *, trace::InstRecord *) const override;
+
+        using %(base_class)s::generateDisassembly;
+    };
+}};

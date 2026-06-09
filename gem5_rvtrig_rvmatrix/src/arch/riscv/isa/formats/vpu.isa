@@ -1,0 +1,52 @@
+// -*- mode:c++ -*-
+// NOVA Processor - VPU and NPU Instruction Formats
+// PhD Research: Futuristic Spacecraft Processor with Hardware Accelerators
+//
+// Custom Instructions use opcode space (OPCODE5 = 0x0a = 0x2B)
+// These instructions are tracked by TimingSimpleCPU for contention modeling.
+//
+// VPU: Vision Processing Unit (OpClass::SimdMisc)
+// NPU: Neural Processing Unit (OpClass::SimdFloatMultAcc)
+
+// VPU R-type operation format - uses SimdMisc OpClass for VPU tracking
+def format VpuOp(code, *opt_flags) {{
+    iop = InstObjParams(name, Name, 'RegOp',
+        {'code': code, 'op_class': 'OpClass::SimdMisc'}, opt_flags)
+    header_output = BasicDeclare.subst(iop)
+    decoder_output = BasicConstructor.subst(iop)
+    decode_block = BasicDecode.subst(iop)
+    exec_output = BasicExecute.subst(iop)
+}};
+
+// NPU R-type operation format - uses SimdFloatMultAcc OpClass for NPU tracking
+// This allows timing.cc to distinguish NPU from VPU operations
+def format NpuOp(code, *opt_flags) {{
+    iop = InstObjParams(name, Name, 'RegOp',
+        {'code': code, 'op_class': 'OpClass::SimdFloatMultAcc'}, opt_flags)
+    header_output = BasicDeclare.subst(iop)
+    decoder_output = BasicConstructor.subst(iop)
+    decode_block = BasicDecode.subst(iop)
+    exec_output = BasicExecute.subst(iop)
+}};
+
+// GPU R-type operation format - uses GpuRender OpClass for SpaceGPU tracking
+// PhD Research: Space-Grade Low-Power GPU for Spacecraft Visualization
+// This allows timing.cc to detect and count GPU operations
+def format GpuOp(code, *opt_flags) {{
+    iop = InstObjParams(name, Name, 'RegOp',
+        {'code': code, 'op_class': 'OpClass::GpuRender'}, opt_flags)
+    header_output = BasicDeclare.subst(iop)
+    decoder_output = BasicConstructor.subst(iop)
+    decode_block = BasicDecode.subst(iop)
+    exec_output = BasicExecute.subst(iop)
+}};
+
+// GPU Compute format - uses GpuCompute OpClass for GPGPU operations
+def format GpuComputeOp(code, *opt_flags) {{
+    iop = InstObjParams(name, Name, 'RegOp',
+        {'code': code, 'op_class': 'OpClass::GpuCompute'}, opt_flags)
+    header_output = BasicDeclare.subst(iop)
+    decoder_output = BasicConstructor.subst(iop)
+    decode_block = BasicDecode.subst(iop)
+    exec_output = BasicExecute.subst(iop)
+}};

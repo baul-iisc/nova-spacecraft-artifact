@@ -1,0 +1,22 @@
+# NOVA Processor - Shared Functional Units SConscript
+# PhD Research: Shared vs Dedicated Accelerator Modeling
+
+Import('*')
+
+# Debug flag for shared functional units
+DebugFlag('SharedFU', 'Shared Functional Unit debug output')
+
+# SimObject declarations
+SimObject('SharedFunctionalUnit.py', sim_objects=[
+    'SharedFunctionalUnit',
+    'SharedAcceleratorPool'
+])
+
+# PIO-based shared accelerator
+SimObject('SharedAccelPio.py', sim_objects=['SharedAccelPio'])
+
+# Source files
+Source('shared_functional_unit.cc')
+Source('shared_fu_interface.cc')
+Source('shared_accel_pio.cc')
+

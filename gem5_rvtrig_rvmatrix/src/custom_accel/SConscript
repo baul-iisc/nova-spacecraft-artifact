@@ -1,0 +1,311 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2024 Chandraboul - PhD Research
+# Spacecraft Heterogeneous Multicore Processor with DLS Architecture
+#
+# SConscript for custom spacecraft accelerators and interfaces
+
+Import('*')
+
+# =============================================================================
+# SimObject declarations
+# =============================================================================
+
+# Original accelerators
+SimObject('CompressionCore.py', sim_objects=['CompressionCore'])
+SimObject('TinyMLAccel.py', sim_objects=['TinyMLAccel'])
+
+# Enhanced accelerators
+SimObject('TinyML32PE.py', sim_objects=['TinyML32PE'])
+SimObject('CCSDSTmTc.py', sim_objects=['CCSDSTmTc'])
+SimObject('CCSDSImageComp.py', sim_objects=['CCSDSImageComp'])
+SimObject('SpaceWireNIC.py', sim_objects=['SpaceWireNIC'])
+SimObject('TSNEthernet.py', sim_objects=['TSNEthernet'])
+
+# DLS and debug support (NEW)
+SimObject('LockstepChecker.py', sim_objects=['LockstepChecker'])
+SimObject('CXLInterface.py', sim_objects=['CXLInterface'])
+SimObject('DebugInterface.py', sim_objects=['DebugInterface'])
+
+# DianNao-style Matrix Tile Accelerator (NEW)
+SimObject('MatrixTileAccel.py', sim_objects=['MatrixTileAccel'])
+
+# TinyTPU - TPU-like Systolic Array Accelerator (NEW)
+SimObject('TinyTPU.py', sim_objects=['TinyTPU'])
+
+# Shared accelerators for multicore contention study (PhD Research)
+SimObject('SharedMatrixAccel.py', sim_objects=['SharedMatrixAccel'])
+SimObject('SharedCORDICAccel.py', sim_objects=['SharedCORDICAccel'])
+
+# CORDIC Pipeline Accelerator (PhD Research: NOVA CORDIC with up to 64 stages)
+SimObject('CORDICPipeline.py', sim_objects=['CORDICPipeline'])
+
+# Fault Injection and Traffic Generation Framework (PhD Research)
+SimObject('FaultInjector.py', sim_objects=['FaultInjector'])
+SimObject('SpaceTrafficGen.py', sim_objects=['SpaceTrafficGen'])
+
+# =============================================================================
+# PhD Research: Advanced Multicore Exploration Framework (gem5-multicore11)
+# =============================================================================
+
+# Research Q1: Adaptive Accelerator Allocation
+SimObject('AdaptiveAllocator.py', sim_objects=['AdaptiveAllocator'])
+
+# Research Q2: Congestion-Aware Scheduling
+SimObject('CongestionScheduler.py', sim_objects=['CongestionScheduler'])
+
+# Research Q3: Radiation-Hardened Accelerator Architecture
+SimObject('RadiationHardenedAccel.py', sim_objects=['RadiationHardenedAccel'])
+
+# Research Q4: Heterogeneous Accelerator Network
+SimObject('HeterogeneousAccelNetwork.py', sim_objects=['HeterogeneousAccelNetwork'])
+
+# Research Q5: Energy-Proportional Design
+SimObject('EnergyProportionalManager.py', sim_objects=['EnergyProportionalManager'])
+
+# Research Q7: Space Computing Benchmark Suite
+SimObject('SpaceBenchmark.py', sim_objects=['SpaceBenchmark'])
+
+# Research Q8: Mission-Aware Performance Metrics
+SimObject('MissionMetrics.py', sim_objects=['MissionMetrics'])
+
+# =============================================================================
+# Source files
+# =============================================================================
+
+# Original accelerators
+Source('compression_core.cc')
+Source('tiny_ml_accel.cc')
+
+# Enhanced accelerators
+Source('tiny_ml_32pe.cc')
+Source('ccsds_tmtc.cc')
+Source('ccsds_image_comp.cc')
+Source('spacewire_nic.cc')
+Source('tsn_ethernet.cc')
+
+# DLS and debug support (NEW)
+Source('lockstep_checker.cc')
+Source('cxl_interface.cc')
+Source('debug_interface.cc')
+
+# DianNao-style Matrix Tile Accelerator (NEW)
+Source('matrix_tile_accel.cc')
+
+# TinyTPU - TPU-like Systolic Array Accelerator (NEW)
+Source('tiny_tpu.cc')
+
+# Shared accelerators for multicore contention study (PhD Research)
+Source('shared_matrix_accel.cc')
+Source('shared_cordic_accel.cc')
+
+# CORDIC Pipeline Accelerator (PhD Research: NOVA CORDIC with up to 64 stages)
+Source('cordic_pipeline.cc')
+
+# Fault Injection and Traffic Generation Framework (PhD Research)
+Source('fault_injector.cc')
+Source('space_traffic_gen.cc')
+
+# =============================================================================
+# PhD Research: Advanced Multicore Exploration Framework (gem5-multicore11)
+# =============================================================================
+
+# Research Q1: Adaptive Accelerator Allocation
+Source('adaptive_allocator.cc')
+
+# Research Q2: Congestion-Aware Scheduling  
+Source('congestion_scheduler.cc')
+
+# Research Q3: Radiation-Hardened Accelerator Architecture
+Source('radiation_hardened.cc')
+
+# Research Q4: Heterogeneous Accelerator Network
+Source('heterogeneous_accel.cc')
+
+# Research Q5: Energy-Proportional Design
+Source('energy_proportional.cc')
+
+# Research Q7: Space Computing Benchmark Suite
+Source('space_benchmark.cc')
+
+# Research Q8: Mission-Aware Performance Metrics
+Source('mission_metrics.cc')
+
+# =============================================================================
+# Debug flags for tracing
+# =============================================================================
+
+# Original debug flags
+DebugFlag('CompressionCore', 
+          "Debug output for spacecraft compression accelerator")
+DebugFlag('TinyMLAccel', 
+          "Debug output for tiny ML accelerator")
+
+# Enhanced accelerator debug flags
+DebugFlag('TinyML32PE',
+          "Debug output for enhanced 32-PE TinyML accelerator")
+DebugFlag('CCSDSTmTc',
+          "Debug output for CCSDS TM/TC protocol accelerator")
+DebugFlag('CCSDSImageComp',
+          "Debug output for CCSDS 122.0 image compression accelerator")
+DebugFlag('SpaceWireNIC',
+          "Debug output for SpaceWire network interface controller")
+DebugFlag('TSNEthernet',
+          "Debug output for TSN Ethernet controller")
+
+# DLS and debug support flags (NEW)
+DebugFlag('LockstepChecker',
+          "Debug output for DLS lockstep checker")
+DebugFlag('CXLInterface',
+          "Debug output for CXL interface controller")
+DebugFlag('DebugInterface',
+          "Debug output for hardware debug interface")
+
+# DianNao-style Matrix Tile Accelerator debug flag (NEW)
+DebugFlag('MatrixTileAccel',
+          "Debug output for DianNao-style matrix tile accelerator")
+
+# TinyTPU debug flag (NEW)
+DebugFlag('TinyTPU',
+          "Debug output for TinyTPU systolic array accelerator")
+
+# Shared accelerator debug flags (PhD Research)
+DebugFlag('SharedMatrixAccel',
+          "Debug output for shared matrix accelerator with arbitration")
+DebugFlag('SharedCORDICAccel',
+          "Debug output for shared CORDIC accelerator with arbitration")
+DebugFlag('CORDICPipeline',
+          "Debug output for pipelined CORDIC accelerator (32-stage)")
+
+# Fault Injection and Traffic Generation debug flags (PhD Research)
+DebugFlag('FaultInjector',
+          "Debug output for fault injection framework")
+DebugFlag('SpaceTrafficGen',
+          "Debug output for space workload traffic generator")
+
+# =============================================================================
+# PhD Research: Advanced Multicore Exploration Debug Flags (gem5-multicore11)
+# =============================================================================
+
+# Research Q1: Adaptive Accelerator Allocation
+DebugFlag('AdaptiveAllocator',
+          "Debug output for adaptive accelerator allocation system")
+
+# Research Q2: Congestion-Aware Scheduling
+DebugFlag('CongestionScheduler',
+          "Debug output for congestion-aware priority scheduler")
+
+# Research Q3: Radiation-Hardened Accelerator Architecture
+DebugFlag('RadiationHardened',
+          "Debug output for radiation-hardened TMR accelerator")
+
+# Research Q4: Heterogeneous Accelerator Network
+DebugFlag('HeterogeneousAccel',
+          "Debug output for heterogeneous accelerator network")
+
+# Research Q5: Energy-Proportional Design
+DebugFlag('EnergyProportional',
+          "Debug output for energy-proportional manager with DVFS")
+
+# Research Q7: Space Computing Benchmark Suite
+DebugFlag('SpaceBenchmark',
+          "Debug output for space computing benchmark suite")
+
+# Research Q8: Mission-Aware Performance Metrics
+DebugFlag('MissionMetrics',
+          "Debug output for mission-aware performance metrics")
+
+# =============================================================================
+# Compound debug flags
+# =============================================================================
+
+# Combined debug flag for all custom accelerators
+CompoundFlag('CustomAccel', [
+    'CompressionCore', 
+    'TinyMLAccel',
+    'TinyML32PE',
+    'CCSDSTmTc',
+    'CCSDSImageComp',
+    'SpaceWireNIC',
+    'TSNEthernet',
+    'LockstepChecker',
+    'CXLInterface',
+    'DebugInterface',
+    'MatrixTileAccel',
+    'TinyTPU'
+], "Debug output for all custom spacecraft accelerators")
+
+# Grouped debug flags by category
+CompoundFlag('SpacecraftML', [
+    'TinyMLAccel',
+    'TinyML32PE',
+    'MatrixTileAccel',
+    'TinyTPU',
+    'SharedMatrixAccel',
+    'SharedCORDICAccel',
+    'CORDICPipeline'
+], "Debug output for spacecraft ML accelerators")
+
+CompoundFlag('SpacecraftComms', [
+    'CompressionCore',
+    'CCSDSTmTc',
+    'SpaceWireNIC',
+    'TSNEthernet',
+    'CXLInterface'
+], "Debug output for spacecraft communication interfaces")
+
+CompoundFlag('SpacecraftData', [
+    'CompressionCore',
+    'CCSDSTmTc',
+    'CCSDSImageComp'
+], "Debug output for spacecraft data processing accelerators")
+
+CompoundFlag('SpacecraftFaultTolerance', [
+    'LockstepChecker',
+    'DebugInterface',
+    'FaultInjector'
+], "Debug output for fault tolerance and debug features")
+
+CompoundFlag('SpacecraftTraffic', [
+    'SpaceTrafficGen',
+    'SharedMatrixAccel',
+    'SharedCORDICAccel'
+], "Debug output for traffic generation and contention analysis")
+
+# =============================================================================
+# PhD Research Compound Flags (gem5-multicore11)
+# =============================================================================
+
+CompoundFlag('PhDResearchAll', [
+    'AdaptiveAllocator',
+    'CongestionScheduler',
+    'RadiationHardened',
+    'HeterogeneousAccel',
+    'EnergyProportional',
+    'SpaceBenchmark',
+    'MissionMetrics',
+    'FaultInjector',
+    'SpaceTrafficGen'
+], "Debug output for all PhD research components")
+
+CompoundFlag('PhDAllocation', [
+    'AdaptiveAllocator',
+    'CongestionScheduler',
+    'HeterogeneousAccel'
+], "Debug output for accelerator allocation research")
+
+CompoundFlag('PhDReliability', [
+    'RadiationHardened',
+    'FaultInjector',
+    'MissionMetrics'
+], "Debug output for reliability and radiation research")
+
+CompoundFlag('PhDEnergy', [
+    'EnergyProportional',
+    'MissionMetrics'
+], "Debug output for energy efficiency research")
+
+CompoundFlag('PhDBenchmark', [
+    'SpaceBenchmark',
+    'SpaceTrafficGen',
+    'MissionMetrics'
+], "Debug output for benchmarking and metrics research")

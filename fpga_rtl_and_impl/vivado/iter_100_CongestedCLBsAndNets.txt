@@ -1,0 +1,8 @@
+List of CLB Tiles
+CLEM_X21Y318
+CLEL_R_X21Y318
+
+List of Congested Nets
+u_tsn/port_macs[3].mac_inst/port_rx_dst[3]_20[24]
+u_tsn/port_macs[3].mac_inst/port_rx_dst[3]_20[26]
+

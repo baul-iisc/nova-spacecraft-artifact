@@ -1,0 +1,21 @@
+# -*- mode:python -*-
+
+# NOVA Processor - GPU-like SIMD Vision Accelerator
+# PhD Research: Futuristic Spacecraft Processor
+
+Import('*')
+
+if env['CONF']['BUILD_ISA']:
+    SimObject('NOVASIMDUnit.py', sim_objects=[
+        'NOVASIMDUnit',
+        'NOVASIMDCluster', 
+        'NOVAVisionDispatcher'
+    ])
+    
+    # Source files
+    Source('nova_simd_unit.cc')
+    
+    # Debug flags
+    DebugFlag('NOVASIMDUnit', "NOVA SIMD Unit debug messages")
+    DebugFlag('NOVAVision', "NOVA Vision operations debug")
+

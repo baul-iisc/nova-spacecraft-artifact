@@ -1,0 +1,45 @@
+# NOVA Processor - Spacecraft Module SConscript
+# PhD Research: Futuristic Spacecraft Processor
+
+Import('*')
+
+# Debug flags for spacecraft components
+DebugFlag('VPU', 'Vision Processing Unit debug')
+DebugFlag('NPU', 'Neural Processing Unit debug')
+DebugFlag('SpaceGPU', 'Space-Grade GPU debug')
+DebugFlag('MissionPhase', 'Mission Phase Manager debug')
+DebugFlag('TaskScheduler', 'Global Task Scheduler debug')
+DebugFlag('AccelManager', 'Accelerator Resource Manager debug')
+DebugFlag('ISROTasks', 'ISRO Task definitions debug')
+DebugFlag('TrigAccel', 'MMIO Trigonometric Accelerator debug')
+DebugFlag('MatAccel', 'MMIO Matrix Accelerator debug')
+
+# Compound debug flag for all spacecraft components
+CompoundFlag('Spacecraft', ['VPU', 'NPU', 'SpaceGPU', 'MissionPhase', 'TaskScheduler', 
+                            'AccelManager', 'ISROTasks', 'TrigAccel', 'MatAccel'])
+
+# SimObject Python files
+SimObject('VisionProcessingUnit.py', sim_objects=['VisionProcessingUnit'])
+SimObject('NeuralProcessingUnit.py', sim_objects=['NeuralProcessingUnit'])
+SimObject('SpaceGPU.py', sim_objects=['SpaceGPU'])
+SimObject('MissionPhaseManager.py', sim_objects=['MissionPhaseManager'])
+SimObject('GlobalTaskScheduler.py', sim_objects=['GlobalTaskScheduler'])
+SimObject('AcceleratorResourceManager.py', sim_objects=['AcceleratorResourceManager'])
+SimObject('ISROTaskDefinitions.py', sim_objects=['ISROTaskDefinitions'])
+SimObject('NOVAProcessor.py', sim_objects=['NOVAProcessor'])
+SimObject('MMIOTrigAccel.py', sim_objects=['MMIOTrigAccel'])
+
+# Source files
+Source('vision_processing_unit.cc')
+Source('neural_processing_unit.cc')
+Source('space_gpu.cc')
+Source('mission_phase_manager.cc')
+Source('global_task_scheduler.cc')
+Source('accel_resource_manager.cc')
+Source('isro_task_definitions.cc')
+Source('nova_processor.cc')
+Source('mmio_trig_accel.cc')
+
+
+
+

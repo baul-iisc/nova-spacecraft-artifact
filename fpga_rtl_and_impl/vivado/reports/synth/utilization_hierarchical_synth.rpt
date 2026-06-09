@@ -1,0 +1,147 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
+| Date         : Tue Mar 10 05:55:10 2026
+| Host         : csrmaster running 64-bit Ubuntu 22.04.5 LTS
+| Command      : report_utilization -hierarchical -hierarchical_depth 5 -file reports/synth/utilization_hierarchical_synth.rpt
+| Design       : octa_core_rv64_soc_integrated
+| Device       : xcvu9p-flga2104-2-e
+| Speed File   : -2
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------+------------------------------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+|              Instance             |               Module               | Total LUTs | Logic LUTs | LUTRAMs | SRLs |   FFs  | RAMB36 | RAMB18 | URAM | DSP Blocks |
++-----------------------------------+------------------------------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+| octa_core_rv64_soc_integrated     |                              (top) |     189658 |     189442 |       0 |  216 | 133393 |   1000 |    162 |    0 |        326 |
+|   (octa_core_rv64_soc_integrated) |                              (top) |          4 |          4 |       0 |    0 |      8 |      8 |      2 |    0 |          0 |
+|   gen_cordic[0].u_cordic          |                   fp64_cordic_unit |       8501 |       8447 |       0 |   54 |   3393 |      0 |      0 |    0 |          0 |
+|   gen_cordic[1].u_cordic          |                 fp64_cordic_unit_0 |       8501 |       8447 |       0 |   54 |   3393 |      0 |      0 |    0 |          0 |
+|   gen_cordic[2].u_cordic          |                 fp64_cordic_unit_1 |       8501 |       8447 |       0 |   54 |   3393 |      0 |      0 |    0 |          0 |
+|   gen_cordic[3].u_cordic          |                 fp64_cordic_unit_2 |       8501 |       8447 |       0 |   54 |   3393 |      0 |      0 |    0 |          0 |
+|   gen_cxl[0].u_cxl                |           cxl_memory_controller__1 |       2763 |       2763 |       0 |    0 |   9081 |      0 |      0 |    0 |          0 |
+|   gen_cxl[1].u_cxl                |              cxl_memory_controller |       2763 |       2763 |       0 |    0 |   9081 |      0 |      0 |    0 |          0 |
+|   gen_dls_pairs[0].u_dls_pair     |                 dls_core_pair_rv64 |      21783 |      21783 |       0 |    0 |  12072 |      0 |      0 |    0 |          0 |
+|     (gen_dls_pairs[0].u_dls_pair) |                 dls_core_pair_rv64 |          1 |          1 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_pcpi_router                 |               pcpi_accel_router_29 |         16 |         16 |       0 |    0 |   1283 |      0 |      0 |    0 |          0 |
+|     u_primary                     |                          rv64_core |      10890 |      10890 |       0 |    0 |   5393 |      0 |      0 |    0 |          0 |
+|       (u_primary)                 |                          rv64_core |       6856 |       6856 |       0 |    0 |   5046 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_33 |       4034 |       4034 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_33 |       4004 |       4004 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_34 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_35 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_shadow                      |          rv64_core__parameterized0 |      10876 |      10876 |       0 |    0 |   5390 |      0 |      0 |    0 |          0 |
+|       (u_shadow)                  |          rv64_core__parameterized0 |       6769 |       6769 |       0 |    0 |   5043 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_30 |       4107 |       4107 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_30 |       4078 |       4078 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_31 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_32 |         14 |         14 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|   gen_dls_pairs[1].u_dls_pair     | dls_core_pair_rv64__parameterized0 |      21051 |      21051 |       0 |    0 |  10933 |      0 |      0 |    0 |          0 |
+|     (gen_dls_pairs[1].u_dls_pair) | dls_core_pair_rv64__parameterized0 |          2 |          2 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_pcpi_router                 |               pcpi_accel_router_22 |         74 |         74 |       0 |    0 |    131 |      0 |      0 |    0 |          0 |
+|     u_primary                     |          rv64_core__parameterized1 |      10097 |      10097 |       0 |    0 |   5406 |      0 |      0 |    0 |          0 |
+|       (u_primary)                 |          rv64_core__parameterized1 |       6403 |       6403 |       0 |    0 |   5059 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_26 |       3694 |       3694 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_26 |       3664 |       3664 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_27 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_28 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_shadow                      |          rv64_core__parameterized2 |      10878 |      10878 |       0 |    0 |   5390 |      0 |      0 |    0 |          0 |
+|       (u_shadow)                  |          rv64_core__parameterized2 |       6770 |       6770 |       0 |    0 |   5043 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_23 |       4108 |       4108 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_23 |       4079 |       4079 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_24 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_25 |         14 |         14 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|   gen_dls_pairs[2].u_dls_pair     | dls_core_pair_rv64__parameterized1 |      21948 |      21948 |       0 |    0 |  12091 |      0 |      0 |    0 |          0 |
+|     (gen_dls_pairs[2].u_dls_pair) | dls_core_pair_rv64__parameterized1 |          1 |          1 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_pcpi_router                 |               pcpi_accel_router_15 |          9 |          9 |       0 |    0 |   1283 |      0 |      0 |    0 |          0 |
+|     u_primary                     |          rv64_core__parameterized3 |      11063 |      11063 |       0 |    0 |   5412 |      0 |      0 |    0 |          0 |
+|       (u_primary)                 |          rv64_core__parameterized3 |       7027 |       7027 |       0 |    0 |   5065 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_19 |       4036 |       4036 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_19 |       4006 |       4006 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_20 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_21 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_shadow                      |          rv64_core__parameterized4 |      10875 |      10875 |       0 |    0 |   5390 |      0 |      0 |    0 |          0 |
+|       (u_shadow)                  |          rv64_core__parameterized4 |       6768 |       6768 |       0 |    0 |   5043 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_16 |       4107 |       4107 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_16 |       4078 |       4078 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_17 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_18 |         14 |         14 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|   gen_dls_pairs[3].u_dls_pair     | dls_core_pair_rv64__parameterized2 |      21102 |      21102 |       0 |    0 |  12147 |      0 |      0 |    0 |          0 |
+|     (gen_dls_pairs[3].u_dls_pair) | dls_core_pair_rv64__parameterized2 |          1 |          1 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_pcpi_router                 |                  pcpi_accel_router |         10 |         10 |       0 |    0 |   1283 |      0 |      0 |    0 |          0 |
+|     u_primary                     |          rv64_core__parameterized5 |      10887 |      10887 |       0 |    0 |   5393 |      0 |      0 |    0 |          0 |
+|       (u_primary)                 |          rv64_core__parameterized5 |       6852 |       6852 |       0 |    0 |   5046 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |             fp64_fpu_integrated_12 |       4035 |       4035 |       0 |    0 |    347 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |             fp64_fpu_integrated_12 |       4004 |       4004 |       0 |    0 |    335 |      0 |      0 |    0 |          0 |
+|         u_div                     |                   fp64_div_unit_13 |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                  fp64_sqrt_unit_14 |         16 |         16 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|     u_shadow                      |          rv64_core__parameterized6 |      10204 |      10204 |       0 |    0 |   5465 |      0 |      0 |    0 |          0 |
+|       (u_shadow)                  |          rv64_core__parameterized6 |       6785 |       6785 |       0 |    0 |   5049 |      0 |      0 |    0 |          0 |
+|       gen_fpu.u_fpu               |                fp64_fpu_integrated |       3419 |       3419 |       0 |    0 |    416 |      0 |      0 |    0 |          0 |
+|         (gen_fpu.u_fpu)           |                fp64_fpu_integrated |       3390 |       3390 |       0 |    0 |    404 |      0 |      0 |    0 |          0 |
+|         u_div                     |                      fp64_div_unit |         15 |         15 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|         u_sqrt                    |                     fp64_sqrt_unit |         14 |         14 |       0 |    0 |      6 |      0 |      0 |    0 |          0 |
+|   gen_jesd204b[0].u_jesd204b      |                 jesd204b_interface |        378 |        378 |       0 |    0 |    239 |      0 |      0 |    0 |          0 |
+|   gen_jesd204b[1].u_jesd204b      |              jesd204b_interface__1 |        378 |        378 |       0 |    0 |    239 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[0].u_l1_dcache    |                 l1_cache_secded__9 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[1].u_l1_dcache    |                l1_cache_secded__10 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[2].u_l1_dcache    |                l1_cache_secded__11 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[3].u_l1_dcache    |                l1_cache_secded__12 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[4].u_l1_dcache    |                l1_cache_secded__13 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[5].u_l1_dcache    |                l1_cache_secded__14 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[6].u_l1_dcache    |                l1_cache_secded__15 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_dcache[7].u_l1_dcache    |                    l1_cache_secded |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[0].u_l1_icache    |                 l1_cache_secded__1 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[1].u_l1_icache    |                 l1_cache_secded__2 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[2].u_l1_icache    |                 l1_cache_secded__3 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[3].u_l1_icache    |                 l1_cache_secded__4 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[4].u_l1_icache    |                 l1_cache_secded__5 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[5].u_l1_icache    |                 l1_cache_secded__6 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[6].u_l1_icache    |                 l1_cache_secded__7 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_l1_icache[7].u_l1_icache    |                 l1_cache_secded__8 |         23 |         23 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|   gen_spi[0].u_spi                |                         spi_master |         23 |         23 |       0 |    0 |     20 |      0 |      0 |    0 |          0 |
+|   gen_spi[1].u_spi                |                       spi_master_3 |         23 |         23 |       0 |    0 |     20 |      0 |      0 |    0 |          0 |
+|   gen_spi[2].u_spi                |                       spi_master_4 |         23 |         23 |       0 |    0 |     20 |      0 |      0 |    0 |          0 |
+|   gen_spi[3].u_spi                |                       spi_master_5 |         23 |         23 |       0 |    0 |     20 |      0 |      0 |    0 |          0 |
+|   gen_systolic[0].u_systolic      |         systolic_array_3x3_fp64__1 |       3204 |       3204 |       0 |    0 |   1749 |      0 |      0 |    0 |         81 |
+|   gen_systolic[1].u_systolic      |         systolic_array_3x3_fp64__2 |       3204 |       3204 |       0 |    0 |   1749 |      0 |      0 |    0 |         81 |
+|   gen_systolic[2].u_systolic      |         systolic_array_3x3_fp64__3 |       3204 |       3204 |       0 |    0 |   1749 |      0 |      0 |    0 |         81 |
+|   gen_systolic[3].u_systolic      |            systolic_array_3x3_fp64 |       3204 |       3204 |       0 |    0 |   1749 |      0 |      0 |    0 |         81 |
+|   u_ccsds                         |        ccsds_compression_subsystem |         47 |         47 |       0 |    0 |     41 |      0 |      0 |    0 |          0 |
+|     (u_ccsds)                     |        ccsds_compression_subsystem |          1 |          1 |       0 |    0 |      0 |      0 |      0 |    0 |          0 |
+|     u_img                         |             ccsds_image_compressor |         20 |         20 |       0 |    0 |     19 |      0 |      0 |    0 |          0 |
+|     u_tc                          |                   ccsds_tc_encoder |         10 |         10 |       0 |    0 |     13 |      0 |      0 |    0 |          0 |
+|     u_tm                          |                   ccsds_tm_encoder |         16 |         16 |       0 |    0 |      9 |      0 |      0 |    0 |          0 |
+|   u_ddr4                          |                    ddr4_controller |         18 |         18 |       0 |    0 |     29 |      0 |      0 |    0 |          0 |
+|   u_debug                         |                       debug_module |        222 |        222 |       0 |    0 |    466 |      0 |      0 |    0 |          0 |
+|   u_l2_cache                      |                       l2_cache_4mb |       4613 |       4613 |       0 |    0 |   1628 |    992 |    160 |    0 |          0 |
+|   u_periph_bridge                 |              peripheral_bus_bridge |         98 |         98 |       0 |    0 |    311 |      0 |      0 |    0 |          0 |
+|   u_snoop_bus                     |                          snoop_bus |       8728 |       8728 |       0 |    0 |   1686 |      0 |      0 |    0 |          0 |
+|     (u_snoop_bus)                 |                          snoop_bus |          3 |          3 |       0 |    0 |     32 |      0 |      0 |    0 |          0 |
+|     u_moesi                       |                   moesi_controller |       8725 |       8725 |       0 |    0 |   1654 |      0 |      0 |    0 |          0 |
+|   u_spacewire                     |                   spacewire_router |        191 |        191 |       0 |    0 |    241 |      0 |      0 |    0 |          0 |
+|     (u_spacewire)                 |                   spacewire_router |          0 |          0 |       0 |    0 |      3 |      0 |      0 |    0 |          0 |
+|     spw_ports[0].codec            |                    spacewire_codec |         65 |         65 |       0 |    0 |     79 |      0 |      0 |    0 |          0 |
+|     spw_ports[1].codec            |                  spacewire_codec_9 |         55 |         55 |       0 |    0 |     53 |      0 |      0 |    0 |          0 |
+|     spw_ports[2].codec            |                 spacewire_codec_10 |         36 |         36 |       0 |    0 |     53 |      0 |      0 |    0 |          0 |
+|     spw_ports[3].codec            |                 spacewire_codec_11 |         35 |         35 |       0 |    0 |     53 |      0 |      0 |    0 |          0 |
+|   u_tinyml                        |                 tinyml_accelerator |      31261 |      31261 |       0 |    0 |  40590 |      0 |      0 |    0 |          2 |
+|   u_tsn                           |                         tsn_switch |       5000 |       5000 |       0 |    0 |   1792 |      0 |      0 |    0 |          0 |
+|     (u_tsn)                       |                         tsn_switch |        252 |        252 |       0 |    0 |   1084 |      0 |      0 |    0 |          0 |
+|     port_macs[0].mac_inst         |                            tsn_mac |        816 |        816 |       0 |    0 |    177 |      0 |      0 |    0 |          0 |
+|     port_macs[1].mac_inst         |                          tsn_mac_6 |       1463 |       1463 |       0 |    0 |    177 |      0 |      0 |    0 |          0 |
+|     port_macs[2].mac_inst         |                          tsn_mac_7 |        913 |        913 |       0 |    0 |    177 |      0 |      0 |    0 |          0 |
+|     port_macs[3].mac_inst         |                          tsn_mac_8 |       1556 |       1556 |       0 |    0 |    177 |      0 |      0 |    0 |          0 |
+|   u_uart                          |                    uart_controller |         30 |         30 |       0 |    0 |     22 |      0 |      0 |    0 |          0 |
++-----------------------------------+------------------------------------+------------+------------+---------+------+--------+--------+--------+------+------------+
+
+

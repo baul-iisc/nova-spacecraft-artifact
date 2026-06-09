@@ -1,0 +1,12 @@
+# -*- mode:python -*-
+
+# Copyright (c) 2024 NOVA Processor Research
+# Real-Time Scheduling for Spacecraft Accelerators
+
+Import('*')
+
+# Build RT scheduler as a library (not SimObject)
+Source('rt_scheduler.cc')
+
+DebugFlag('RTScheduler', "Real-time scheduler for accelerators")
+DebugFlag('ContentionPredictor', "Contention prediction for WCET")

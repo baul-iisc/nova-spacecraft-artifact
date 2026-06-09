@@ -1,0 +1,47 @@
+gem5-NOVA — IEEE Transactions on Computers artifact tree
+========================================================
+
+This checkout is trimmed from gem5-nova-fix1 for the spacecraft benchmark artifact.
+It retains the validated RISC-V decode models for:
+  - custom trigonometric FP ops (e.g. fsin.d/fcos.d) with TimingSimpleCPU latency stalls
+  - 3×3 output-stationary systolic GEMM via sys.sys_mmacd (see src/arch/riscv/isa/decoder.isa)
+
+Build (RISCV, optimised):
+  scons build/RISCV/gem5.opt -j$(nproc)
+
+Single-core SE run (matches README-style parameters):
+  export GEM5_IEEE_TC_ARTIFACT=1
+  ./build/RISCV/gem5.opt --outdir=m5out-hello \\
+    configs/learning_gem5/part1/riscv_modified_configs.py \\
+    /path/to/spacecraft_xxx*.riscv \\
+    --l1i_size=8kB --l1d_size=16kB --l2_size=64kB --system_mem_range=64GB \\
+    --clock_freq=500MHz --branch_pred=BiModeBP --prefetcher=None \\
+    --cpu_type=TimingSimpleCPU \\
+    --l1i_assoc=2 --l1d_assoc=2 \\
+    --l1i_tag_latency=2 --l1d_tag_latency=4 \\
+    --l1i_data_latency=2 --l1d_data_latency=4 \\
+    --l1i_response_latency=2 --l1d_response_latency=4 \\
+    --l1i_mshrs=2 --l1d_mshrs=2 \\
+    --l1i_tgts_per_mshr=8 --l1d_tgts_per_mshr=8
+
+Optional timing traces (much slower): add --simple_trace
+
+Multicore DSE next project:
+  Omit GEM5_IEEE_TC_ARTIFACT and set NOVA_NUM_TRIG_ACCELS / NOVA_NUM_MAT_ACCELS / …
+  as in gem5-nova-fix1.
+
+McPAT: use GEM5_IEEE_TC_ARTIFACT=1 so contention uses one blocking instance per
+accelerator type; feed McPAT the floorplan/counts aligned with those instances.
+
+Verification (hardware custom instructions actually run)
+---------------------------------------------------------
+AtomicSimpleCPU: fast ISA/memory-functional check — does NOT model accelerator
+latency or cache contention; useful only as a sanity pass.
+
+TimingSimpleCPU: what the paper simulations use — L1/L2/memory timing PLUS
+blocked stalls on trig/matrix shared functional units — required to trust
+hardware-variant runs.
+
+Scripts/verify_spacecraft_cpus.zsh runs workload 28_AI (SW/HW/TRIG/SYSTOLIC)
+with both CPUs for side-by-side comparison; use ONLY_TIMING=1 when you skip
+Atomic. Override WORKLOAD_ROOT to point at another short workload directory.

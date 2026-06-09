@@ -1,0 +1,461 @@
+//src/arch/riscv/isa/formats/matrix.isa
+let {{
+
+def MMemBase(name, Name, ea_code, code, base_class,
+             mem_flags, inst_flags,
+             declare_template_base=MatrixMacroDeclare,
+             decode_template=MatrixDecode, 
+             exec_template_base='',
+             macro_construtor=MatrixMacroConstructor,
+             op_class='',
+             is_macroop=True):
+    iop = InstObjParams(name, Name, base_class, 
+        { 'code': code,
+          'ea_code': ea_code,
+          'op_class': op_class },
+          inst_flags)
+
+
+    header_output   = declare_template_base.subst(iop)
+    decoder_output  = macro_construtor.subst(iop)
+    decode_block    = decode_template.subst(iop)
+    exec_output     = ''
+
+    if not is_macroop:
+        return (header_output, decoder_output, decode_block, exec_output)
+    
+    micro_class_name = exec_template_base + 'MicroInst'
+    microiop = InstObjParams(name + '_micro',
+        Name + 'Micro',
+        exec_template_base + 'MicroInst',
+        {'ea_code': ea_code,
+         'code': code},
+        inst_flags
+        )
+    
+
+    if exec_template_base.startswith('Systolic'):
+        microDeclTemplate = eval(exec_template_base + 'MicroDeclare')
+        microConsTemplate = eval(exec_template_base + 'MicroConstructor')
+        microExecTemplate = eval(exec_template_base + 'MicroExecute')
+        microInitTemplate = eval(exec_template_base + 'MicroInitiateAcc')
+        microCompTemplate = eval(exec_template_base + 'MicroCompleteAcc')
+    else:
+        microDeclTemplate = eval(exec_template_base + 'MicroDeclare')
+        microConsTemplate = eval(exec_template_base + 'MicroConstructor')
+        microExecTemplate = eval(exec_template_base + 'MicroExecute')
+        microInitTemplate = eval(exec_template_base + 'MicroInitiateAcc')
+        microCompTemplate = eval(exec_template_base + 'MicroCompleteAcc')
+    
+    header_output = microDeclTemplate.subst(microiop) + header_output
+    decoder_output = microConsTemplate.subst(microiop) + decoder_output
+    micro_exec_output = (microExecTemplate.subst(microiop) +
+        microInitTemplate.subst(microiop) +
+        microCompTemplate.subst(microiop))
+    exec_output += micro_exec_output
+
+    return (header_output, decoder_output, decode_block, exec_output)
+
+
+def MArithBase(name, Name, code, base_class,
+             inst_flags,
+             declare_template_base=MatrixMacroDeclare,
+             decode_template=MatrixDecode,
+             constructor_template=MatrixMacroConstructor,
+             exec_template_base='MatrixArith',
+             op_class='OpClass::Matrix',
+             is_macroop=True):
+    iop = InstObjParams(name, Name, base_class, 
+        { 'code': code,
+          'op_class': op_class },
+          inst_flags)
+
+    header_output   = declare_template_base.subst(iop)
+    decoder_output  = constructor_template.subst(iop)
+    decode_block    = decode_template.subst(iop)
+    exec_output     = ''
+
+    if not is_macroop:
+        return (header_output, decoder_output, decode_block, exec_output)
+    
+    micro_class_name = exec_template_base + 'MicroInst'
+    microiop = InstObjParams(name + '_micro',
+        Name + 'Micro',
+        exec_template_base + 'MicroInst',
+        {'code': code,
+         'op_class': op_class},
+        inst_flags
+        )
+
+
+    if exec_template_base.startswith('Systolic'):
+        microDeclTemplate = eval(exec_template_base + 'MicroDeclare')
+        microConsTemplate = eval(exec_template_base + 'MicroConstructor')
+        microExecTemplate = eval(exec_template_base + 'MicroExecute')
+    else:
+        microDeclTemplate = eval(exec_template_base + 'MicroDeclare')
+        microConsTemplate = eval(exec_template_base + 'MicroConstructor')
+        microExecTemplate = eval(exec_template_base + 'MicroExecute')
+    
+    header_output = microDeclTemplate.subst(microiop) + header_output
+    decoder_output = microConsTemplate.subst(microiop) + decoder_output
+    micro_exec_output = microExecTemplate.subst(microiop)
+    exec_output += micro_exec_output
+
+    return (header_output, decoder_output, decode_block, exec_output)
+
+
+def MMoveBase(name, Name, code, base_class,
+             inst_flags,
+             declare_template_base=MatrixMacroDeclare,
+             decode_template=MatrixDecode, 
+             micro_constructor='',
+             macro_construtor=MatrixMacroConstructor,
+             micro_base='MatrixMove',
+             micro_exec=MatrixArithLineMicroExecute,
+             op_class='OpClass::Matrix',
+             is_macroop=True):
+    iop = InstObjParams(name, Name, base_class, 
+        { 'code': code,
+          'op_class': op_class },
+          inst_flags)
+
+    header_output   = declare_template_base.subst(iop)
+    decoder_output  = macro_construtor.subst(iop)
+    decode_block    = decode_template.subst(iop)
+    exec_output     = ''
+
+    if not is_macroop:
+        return (header_output, decoder_output, decode_block, exec_output)
+
+
+    if micro_base.startswith('Systolic'):
+        micro_class_name = micro_base + 'MicroInst'
+        microDeclTemplate = eval(micro_base + 'MicroDeclare')
+    else:
+        micro_class_name = micro_base + 'MicroInst'    
+        microDeclTemplate = eval(micro_base + 'MicroDeclare')
+    
+    microiop = InstObjParams(name + '_micro',
+        Name + 'Micro',
+        micro_class_name,
+        {'code': code,
+         'op_class': op_class},
+        inst_flags)
+
+    header_output = microDeclTemplate.subst(microiop) + header_output
+    decoder_output = micro_constructor.subst(microiop) + decoder_output
+    micro_exec_output = micro_exec.subst(microiop)
+    exec_output += micro_exec_output
+
+    return (header_output, decoder_output, decode_block, exec_output)
+}};
+
+
+def format MatrixLoadOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixLoadMacroInst', 
+                mem_flags, flags, op_class='MemReadOp',
+                macro_construtor=MatrixMacroSplitConstructor,
+                exec_template_base='MatrixLoad')
+}};
+
+// Double Precision Matrix Load Operation
+def format MatrixLoadDoubleOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixLoadDoubleMacroInst', 
+                mem_flags, flags, op_class='MemReadOp',
+                macro_construtor=MatrixMacroSplitConstructor,
+                exec_template_base='MatrixLoadDouble')
+}};
+def format MatrixStoreOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixStoreMacroInst', 
+                 mem_flags, flags, op_class='MemWriteOp',
+                 macro_construtor=MatrixMacroSplitConstructor,
+                 exec_template_base='MatrixStore')
+}};
+
+// Double Precision Matrix Store Operation
+def format MatrixStoreDoubleOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixStoreDoubleMacroInst', 
+                 mem_flags, flags, op_class='MemWriteOp',
+                 macro_construtor=MatrixMacroSplitConstructor,
+                 exec_template_base='MatrixStoreDouble')
+}};
+
+def format MatrixArithLineOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixArithMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixArithLine')
+}};
+
+// Double Precision Matrix Arithmetic Line Operation
+def format MatrixArithLineDoubleOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixArithDoubleMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixArithLineDouble')
+}};
+
+def format MatrixArithOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixArithMacroInst', 
+                   flags)
+}};
+
+// General Matrix Arithmetic Operation
+def format MatrixArithDoubleOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixArithDoubleMacroInst', 
+                   flags,
+                   exec_template_base='MatrixArithDouble')
+}};
+
+def format ScalarMatrixMoveOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMoveBase(name, Name, code, 'MatrixMoveMacroInst', 
+                   flags,
+                   macro_construtor=MatrixMacroConstructor,
+                   micro_constructor=ScalarMatrixMoveMicroConstructor)
+}};
+
+//Add these new formats to the matrix.isa file after the existing format definitions
+
+def format SystolicConfigOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'SystolicConfigMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='SystolicConfig')
+}};
+
+def format SystolicControlOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'SystolicControlMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='SystolicControl')
+}};
+
+def format SystolicStatusOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'SystolicStatusMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='SystolicStatus')
+}};
+
+def format SystolicLoadOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'SystolicLoadMacroInst', 
+                mem_flags, flags, op_class='MemReadOp',
+                macro_construtor=MatrixMacroSplitConstructor,
+                exec_template_base='SystolicLoad')
+}};
+
+def format SystolicLoadDoubleOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'SystolicLoadDoubleMacroInst', 
+                mem_flags, flags, op_class='MemReadOp',
+                macro_construtor=MatrixMacroSplitConstructor,
+                exec_template_base='SystolicLoadDouble')
+}};
+
+def format SystolicStoreOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'SystolicStoreMacroInst', 
+                 mem_flags, flags, op_class='MemWriteOp',
+                 macro_construtor=MatrixMacroSplitConstructor,
+                 exec_template_base='SystolicStore')
+}};
+
+def format SystolicStoreDoubleOp(
+    code,
+    ea_code={{
+        EA = Rs1 + Rs2 * microIdx;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'SystolicStoreDoubleMacroInst', 
+                 mem_flags, flags, op_class='MemWriteOp',
+                 macro_construtor=MatrixMacroSplitConstructor,
+                 exec_template_base='SystolicStoreDouble')
+}};
+
+def format SystolicMmacOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'SystolicMmacMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='SystolicMmac')
+}};
+
+def format SystolicMmacDoubleOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'SystolicMmacDoubleMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='SystolicMmac')
+}};
+
+// Add these format definitions to src/arch/riscv/isa/formats/matrix.isa
+// at the end of the file
+def format MatrixVectorLoadOp(
+    code,
+    ea_code={{
+        EA = Rs1;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixVectorLoadMacroInst', 
+                mem_flags, flags, op_class='MemReadOp',
+                macro_construtor=MatrixMacroConstructor,
+                exec_template_base='MatrixVectorLoad')
+}};
+
+def format MatrixVectorStoreOp(
+    code,
+    ea_code={{
+        EA = Rs1;
+    }},
+    mem_flags=[],
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MMemBase(name, Name, ea_code, code, 'MatrixVectorStoreMacroInst', 
+                 mem_flags, flags, op_class='MemWriteOp',
+                 macro_construtor=MatrixMacroConstructor,
+                 exec_template_base='MatrixVectorStore')
+}};
+
+def format MatrixVectorMulOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixVectorMulMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixVectorMul')
+}};
+
+def format MatrixVectorMacOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixVectorMacMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixVectorMac')
+}};
+
+def format MatrixVectorAddOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixVectorAddMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixVectorAdd')
+}};
+
+def format MatrixVectorSubOp(
+    code,
+    *flags
+) {{
+    (header_output, decoder_output, decode_block, exec_output) = \
+        MArithBase(name, Name, code, 'MatrixVectorSubMacroInst', 
+                   flags,
+                   constructor_template=MatrixMacroConstructor,
+                   exec_template_base='MatrixVectorSub')
+}};

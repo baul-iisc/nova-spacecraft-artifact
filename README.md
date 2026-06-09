@@ -94,16 +94,17 @@ make full    # target: xcvu9p-flga2104-2-e @ 100 MHz
 
 ---
 
-## External Repositories
+## Self-Contained Artifact
 
-> **Note:** The repositories below will be made public upon paper acceptance.
-> Until then, this self-contained bundle is the authoritative artifact.
+This repository is the complete, authoritative artifact for the paper. Everything
+needed to reproduce the results is included here — the gem5 source with the NOVA
+ISA extensions (`gem5_rvtrig_rvmatrix/`), the RISC-V toolchain patches and build
+script (`riscv_gnu_toolchain_patches/`), the FPGA RTL and reports
+(`fpga_rtl_and_impl/`), the McPAT models (`mcpat/`), and all 28 workload sources
+(`synthetic_workloads_28/`). No external repositories need to be cloned.
 
-| Component | Repository | Branch |
-|-----------|-----------|--------|
-| Public artifact (this bundle) | `github.com/baul-iisc/nova-spacecraft-artifact` | `main` |
-| gem5 (full multicore DSE tree) | `github.com/baul-iisc/gem5-multicore21-spacecraft-dse` | `artifact-clean` |
-| RISC-V toolchain (NOVA ISA) | `github.com/baul-iisc/riscv-gnu-toolchain-nova` | `nova-custom-isa` |
+The RISC-V GNU toolchain itself is built from the official upstream source with the
+patches in `riscv_gnu_toolchain_patches/` applied; see that folder's instructions.
 
 ---
 

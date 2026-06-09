@@ -59,15 +59,9 @@ export PATH=$HOME/riscv-nova/bin:$PATH
 Build time: ~40–60 minutes.  
 Dependencies: `autoconf automake texinfo flex bison libgmp-dev libmpfr-dev libmpc-dev`
 
-Alternatively, clone the pre-patched branch directly:
-```bash
-git clone https://github.com/baul-iisc/riscv-gnu-toolchain-nova \
-    --branch nova-custom-isa $HOME/riscv-nova-src
-cd $HOME/riscv-nova-src
-./configure --prefix=$HOME/riscv-nova --with-arch=rv64gc --with-abi=lp64d
-make -j$(nproc)
-export PATH=$HOME/riscv-nova/bin:$PATH
-```
+`build_toolchain.sh` checks out the official upstream RISC-V GNU toolchain, applies
+the NOVA patches from `../riscv_gnu_toolchain_patches/patches/`, and builds it into
+the prefix you pass. No separate repository needs to be cloned.
 
 Verify NOVA instructions are recognised:
 ```bash
